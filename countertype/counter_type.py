@@ -1,4 +1,6 @@
-from typing import Dict, Any, Set, Optional
+from typing import Dict, Any, Set, Optional, Iterator
+
+from countertype.counter_type_registration import CounterTypeRegistration
 
 
 class CounterType:
@@ -13,6 +15,8 @@ class CounterType:
                 "at least the `id` key."
             )
 
+        registration = CounterTypeRegistration(item=item, tags=tags, )
+
         for tag_name, tag_value in tags.items():
             try:
                 reverse_index = self._indexes[tag_name]
@@ -26,9 +30,9 @@ class CounterType:
                 set_items = set()
                 reverse_index[tag_value] = set_items
 
-            set_items.add(item)
+            set_items.add(registration)
 
-    def find(self, **kw) -> Optional[Set]:
+    def find_all(self, **kw) -> Optional[Iterator]:
         _it = kw.items().__iter__()
 
         tag_pair = _it.__next__()
@@ -39,7 +43,10 @@ class CounterType:
                 tag_value not in self._indexes[tag_name]:
             return None
 
-        result_set = set(self._indexes[tag_name][tag_value])
+        try:
+            result_set = set(self._indexes[tag_name][tag_value])
+        except KeyError:
+            return None
 
         try:
             while result_set:
@@ -47,12 +54,38 @@ class CounterType:
                 tag_name = tag_pair[0]
                 tag_value = tag_pair[1]
 
-                if tag_name not in self._indexes or \
-                        tag_value not in self._indexes[tag_name]:
+                try:
+                    result_set.intersection_update(self._indexes[tag_name][tag_value])
+                except KeyError:
                     return None
-
-                result_set.intersection_update(self._indexes[tag_name][tag_value])
         except StopIteration:
             pass
 
-        return result_set
+        return map(lambda it: it.item, result_set)
+
+    def remove(self, *, id: str) -> Any:
+        """
+        Remove an item from all the reverse dictionaries. Returns
+        the item if it exists.
+        :param id:
+        :return:
+        """
+        try:
+            registration_set = self._indexes["id"][id]
+        except KeyError:
+            return None
+
+        registration = registration_set.__iter__().__next__()
+
+        for tag_name, tag_value in registration.tags.items():
+            value_set = self._indexes[tag_name][tag_value]
+            value_set.remove(registration)
+
+            if not value_set:
+                self._indexes[tag_name].pop(tag_value)
+
+            if not self._indexes[tag_name]:
+                self._indexes.pop(tag_name)
+
+        return registration.item
+

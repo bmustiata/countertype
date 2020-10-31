@@ -16,79 +16,74 @@ class CounterTypeTest(unittest.TestCase):
         )
 
     def test_simple_find(self):
-        ct = CounterType()
-
-        ct.put(
-            item="ev1",
-            tags={
-                "id": "ev1",
-                "state": "RUNNING",
-                "parent_id": "123",
-                "deduplication_id": "a",
-            },
-        )
-        ct.put(
-            item="ev2",
-            tags={
-                "id": "ev2",
-                "state": "STOPPED",
-                "parent_id": None,
-                "deduplication_id": "a",
-            },
-        )
+        ct = create_counter_type()
 
         # Finding by a specific tag should work
         self.assertEqual(
             {"ev1"},
-            ct.find(state="RUNNING"),
+            set(ct.find_all(state="RUNNING")),
         )
         self.assertEqual(
             {"ev2"},
-            ct.find(state="STOPPED"),
+            set(ct.find_all(state="STOPPED")),
         )
 
         # Finding with None values should work as well
         self.assertEqual(
             {"ev1"},
-            ct.find(parent_id="123"),
+            set(ct.find_all(parent_id="123")),
         )
         self.assertEqual(
             {"ev2"},
-            ct.find(parent_id=None),
+            set(ct.find_all(parent_id=None)),
         )
 
         # Finding multiple matches should also get us results
         self.assertEqual(
             {"ev1", "ev2"},
-            ct.find(deduplication_id="a"),
+            set(ct.find_all(deduplication_id="a")),
         )
 
     def test_missing_keys_should_not_fail(self):
-        ct = CounterType()
+        ct = create_counter_type()
 
-        ct.put(
-            item="ev1",
-            tags={
-                "id": "ev1",
-                "state": "RUNNING",
-                "parent_id": "123",
-                "deduplication_id": "a",
-            },
-        )
-        ct.put(
-            item="ev2",
-            tags={
-                "id": "ev2",
-                "state": "STOPPED",
-                "parent_id": None,
-                "deduplication_id": "a",
-            },
+        self.assertFalse(
+            ct.find_all(not_existing=3)
         )
 
         self.assertFalse(
-            ct.find(not_existing=3)
+            ct.find_all(deduplication_id=None)
         )
 
-        self.assertFalse(
-            ct.find(deduplication_id=None)
-        )
+    def test_removing_keys_should_clear_collection(self):
+        ct = create_counter_type()
+        ct.remove(id="ev1")
+        ct.remove(id="ev2")
+
+        self.assertEqual(0, len(ct._indexes))
+
+
+def create_counter_type():
+    ct = CounterType()
+
+    ct.put(
+        item="ev1",
+        tags={
+            "id": "ev1",
+            "state": "RUNNING",
+            "parent_id": "123",
+            "deduplication_id": "a",
+        },
+    )
+
+    ct.put(
+        item="ev2",
+        tags={
+            "id": "ev2",
+            "state": "STOPPED",
+            "parent_id": None,
+            "deduplication_id": "a",
+        },
+    )
+
+    return ct
