@@ -1,0 +1,11 @@
+= countertype
+
+A small collection to index objects fast using tags.
+
+== Installation
+
+
+[source,sh]
+-----------------------------------------------------------------------------
+pip install countertype
+-----------------------------------------------------------------------------
