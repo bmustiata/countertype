@@ -62,3 +62,33 @@ class CounterTypeTest(unittest.TestCase):
             {"ev1", "ev2"},
             ct.find(deduplication_id="a"),
         )
+
+    def test_missing_keys_should_not_fail(self):
+        ct = CounterType()
+
+        ct.put(
+            item="ev1",
+            tags={
+                "id": "ev1",
+                "state": "RUNNING",
+                "parent_id": "123",
+                "deduplication_id": "a",
+            },
+        )
+        ct.put(
+            item="ev2",
+            tags={
+                "id": "ev2",
+                "state": "STOPPED",
+                "parent_id": None,
+                "deduplication_id": "a",
+            },
+        )
+
+        self.assertFalse(
+            ct.find(not_existing=3)
+        )
+
+        self.assertFalse(
+            ct.find(deduplication_id=None)
+        )

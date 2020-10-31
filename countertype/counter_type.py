@@ -1,4 +1,4 @@
-from typing import Dict, Any, Set
+from typing import Dict, Any, Set, Optional
 
 
 class CounterType:
@@ -28,12 +28,16 @@ class CounterType:
 
             set_items.add(item)
 
-    def find(self, **kw) -> Set:
+    def find(self, **kw) -> Optional[Set]:
         _it = kw.items().__iter__()
 
         tag_pair = _it.__next__()
         tag_name = tag_pair[0]
         tag_value = tag_pair[1]
+
+        if tag_name not in self._indexes or \
+                tag_value not in self._indexes[tag_name]:
+            return None
 
         result_set = set(self._indexes[tag_name][tag_value])
 
@@ -42,6 +46,10 @@ class CounterType:
                 tag_pair = _it.__next__()
                 tag_name = tag_pair[0]
                 tag_value = tag_pair[1]
+
+                if tag_name not in self._indexes or \
+                        tag_value not in self._indexes[tag_name]:
+                    return None
 
                 result_set.intersection_update(self._indexes[tag_name][tag_value])
         except StopIteration:
