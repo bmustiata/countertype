@@ -4,3 +4,62 @@ Installation
 ============
 
     pip install countertype
+
+Usage
+=====
+
+You can add any hashable items into the collection using tags. Let’s add
+two string values, `"ev1"`, and `"ev2"`. Each element must have at least
+one tag, called `id`, that identifies that object. Ids must be unique
+inside the collection, and can’t be changed later. Regular tags can be
+updated.
+
+    from countertype import CounterType
+
+    ct = CounterType()
+
+    ct.put(
+        item="ev1",
+        tags={
+            "id": "1",
+            "state": "RUNNING",
+            "parent": "ev_parent",
+        },
+    )
+    ct.put(
+        item="ev2",
+        tags={
+            "id": "2",
+            "state": "STOPPED",
+            "parent": "ev_parent",
+        },
+    )
+
+To find elements we can search by any of the defined tags, using the
+`**kw`:
+
+Let’s find all the elements with the *state* tag set to `"STOPPED"`:
+
+    ct.find_all(state="STOPPED")
+
+This will return an iterable if there are such elements, or `None` if no
+elements exist.
+
+To find a single element, we can fetch it again, as an `Optional`:
+
+    ct.find(state="STOPPED")
+
+Multiple tags are also supported, and will intersect the potential
+matches:
+
+    ct.find(state="STOPPED", parent_id="123")
+
+Updating tags for existing items is also possible, by using the item id.
+Of course, multiple tags could be updated.
+
+    ct.update(id="1", state="PROCESSING")
+
+To remove an element from the collection, pass its `id` in the `remove`
+function:
+
+    ct.remove(id="1")

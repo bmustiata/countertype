@@ -62,6 +62,23 @@ class CounterTypeTest(unittest.TestCase):
 
         self.assertEqual(0, len(ct._indexes))
 
+    def test_updating_tags_should_allow_finding(self):
+        ct = create_counter_type()
+        ct.update(id="ev1", state="PROCESSING")
+
+        self.assertFalse(
+            ct.find_all(state="RUNNING"),
+        )
+        self.assertEqual(
+            {"ev1"},
+            set(ct.find_all(state="PROCESSING")),
+        )
+
+        ct.remove(id="ev1")
+        ct.remove(id="ev2")
+
+        self.assertEqual(0, len(ct._indexes))
+
 
 def create_counter_type():
     ct = CounterType()
