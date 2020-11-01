@@ -1,4 +1,4 @@
-from typing import Dict, Any, Set, Optional, Iterator, Generic, TypeVar, Iterable
+from typing import Dict, Any, Set, Optional, Generic, TypeVar
 
 from countertype.counter_type_registration import CounterTypeRegistration
 
