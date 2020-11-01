@@ -1,8 +1,9 @@
-from typing import Dict, Any, Set, Optional, Iterator, Generic, TypeVar
+from typing import Dict, Any, Set, Optional, Iterator, Generic, TypeVar, Iterable
 
 from countertype.counter_type_registration import CounterTypeRegistration
 
 T = TypeVar("T")
+EMPTY_SET: Set[Any] = set()
 
 
 class CounterType(Generic[T]):
@@ -59,7 +60,7 @@ class CounterType(Generic[T]):
 
         return None
 
-    def find_all(self, **kw) -> Optional[Iterator[T]]:
+    def find_all(self, **kw) -> Iterable[T]:
         """
         Find all the items matching the tags.
         :param kw:
@@ -72,12 +73,12 @@ class CounterType(Generic[T]):
         tag_value = tag_pair[1]
 
         if tag_name not in self._indexes or tag_value not in self._indexes[tag_name]:
-            return None
+            return EMPTY_SET
 
         try:
             result_set = set(self._indexes[tag_name][tag_value])
         except KeyError:
-            return None
+            return EMPTY_SET
 
         try:
             while result_set:
@@ -88,7 +89,7 @@ class CounterType(Generic[T]):
                 try:
                     result_set.intersection_update(self._indexes[tag_name][tag_value])
                 except KeyError:
-                    return None
+                    return EMPTY_SET
         except StopIteration:
             pass
 

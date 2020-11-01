@@ -44,8 +44,7 @@ Let’s find all the elements with the *state* tag set to ``"STOPPED"``:
 
     ct.find_all(state="STOPPED")
 
-This will return an iterable if there are such elements, or ``None`` if
-no elements exist.
+This will return an iterable with all the matching elements.
 
 To find a single element, we can fetch it again, as an ``Optional``:
 
