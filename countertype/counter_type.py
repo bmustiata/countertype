@@ -60,7 +60,7 @@ class CounterType(Generic[T]):
 
         return None
 
-    def find_all(self, **kw) -> Iterable[T]:
+    def find_all(self, **kw) -> Set[T]:
         """
         Find all the items matching the tags.
         :param kw:
@@ -93,7 +93,7 @@ class CounterType(Generic[T]):
         except StopIteration:
             pass
 
-        return map(lambda it: it.item, result_set)
+        return set(map(lambda it: it.item, result_set))
 
     def remove(self, *, id: str) -> Optional[T]:
         """
