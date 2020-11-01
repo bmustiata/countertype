@@ -38,7 +38,12 @@ class CounterType:
         :param kw:
         :return:
         """
-        for f in self.find_all(**kw):
+        r = self.find_all(**kw)
+
+        if not r:
+            return None
+
+        for f in r:
             return f
 
         return None

@@ -104,3 +104,4 @@ def create_counter_type():
     )
 
     return ct
+
