@@ -1,4 +1,4 @@
-A small collection to index objects fast using tags.
+A small collection to index objects using tags.
 
 Installation
 ============
@@ -23,20 +23,16 @@ can be updated.
     ct = CounterType()
 
     ct.put(
-        item="ev1",
-        tags={
-            "id": "1",
-            "state": "RUNNING",
-            "parent": "ev_parent",
-        },
+        "ev1",
+        id="1",
+        state="RUNNING",
+        parent="ev_parent",
     )
     ct.put(
-        item="ev2",
-        tags={
-            "id": "2",
-            "state": "STOPPED",
-            "parent": "ev_parent",
-        },
+        "ev2",
+        id="2",
+        state="STOPPED",
+        parent="ev_parent",
     )
 
 To find elements we can search by any of the defined tags, using the

@@ -80,23 +80,19 @@ def create_counter_type():
     ct = CounterType()
 
     ct.put(
-        item="ev1",
-        tags={
-            "id": "ev1",
-            "state": "RUNNING",
-            "parent_id": "123",
-            "deduplication_id": "a",
-        },
+        "ev1",
+        id="ev1",
+        state="RUNNING",
+        parent_id="123",
+        deduplication_id="a",
     )
 
     ct.put(
-        item="ev2",
-        tags={
-            "id": "ev2",
-            "state": "STOPPED",
-            "parent_id": None,
-            "deduplication_id": "a",
-        },
+        "ev2",
+        id="ev2",
+        state="STOPPED",
+        parent_id=None,
+        deduplication_id="a",
     )
 
     return ct

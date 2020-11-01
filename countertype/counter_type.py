@@ -6,9 +6,15 @@ from countertype.counter_type_registration import CounterTypeRegistration
 class CounterType:
     def __init__(self) -> None:
         # for each tag we create a reverse index
-        self._indexes: Dict[str, Dict[Any, Set[Any]]] = dict()
+        self._indexes: Dict[str, Dict[Any, Set[CounterTypeRegistration]]] = dict()
 
-    def put(self, *, tags: Dict[str, Any], item: Any) -> None:
+    def put(self, item: Any, **tags: Dict[str, Any]) -> None:
+        """
+        Put an item into the collection, indexed by tags.
+        :param tags:
+        :param item:
+        :return:
+        """
         if not tags or "id" not in tags:
             raise Exception(
                 "You need to pass in some tags, and the tags must contain "
@@ -105,7 +111,13 @@ class CounterType:
 
         return registration.item
 
-    def update(self, id: str, **kw):
+    def update(self, *, id: str, **kw):
+        """
+        Update the tags for a given item.
+        :param id:
+        :param kw:
+        :return:
+        """
         registration_set = self._indexes["id"][id]
         registration = registration_set.__iter__().__next__()
 
