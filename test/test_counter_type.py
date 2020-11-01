@@ -47,13 +47,9 @@ class CounterTypeTest(unittest.TestCase):
     def test_missing_keys_should_not_fail(self):
         ct = create_counter_type()
 
-        self.assertFalse(
-            ct.find_all(not_existing=3)
-        )
+        self.assertFalse(ct.find_all(not_existing=3))
 
-        self.assertFalse(
-            ct.find_all(deduplication_id=None)
-        )
+        self.assertFalse(ct.find_all(deduplication_id=None))
 
     def test_removing_keys_should_clear_collection(self):
         ct = create_counter_type()
@@ -104,4 +100,3 @@ def create_counter_type():
     )
 
     return ct
-

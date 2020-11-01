@@ -15,7 +15,10 @@ class CounterType:
                 "at least the `id` key."
             )
 
-        registration = CounterTypeRegistration(item=item, tags=tags, )
+        registration = CounterTypeRegistration(
+            item=item,
+            tags=tags,
+        )
 
         for tag_name, tag_value in tags.items():
             try:
@@ -60,8 +63,7 @@ class CounterType:
         tag_name = tag_pair[0]
         tag_value = tag_pair[1]
 
-        if tag_name not in self._indexes or \
-                tag_value not in self._indexes[tag_name]:
+        if tag_name not in self._indexes or tag_value not in self._indexes[tag_name]:
             return None
 
         try:
@@ -110,9 +112,8 @@ class CounterType:
         for tag_name, tag_value in kw.items():
             if tag_name in registration.tags:
                 self._remove_tag_value(
-                    registration,
-                    tag_name,
-                    registration.tags[tag_name])
+                    registration, tag_name, registration.tags[tag_name]
+                )
 
             reverse_index = self._indexes[tag_name]
             try:
@@ -131,4 +132,3 @@ class CounterType:
             self._indexes[tag_name].pop(tag_value)
         if not self._indexes[tag_name]:
             self._indexes.pop(tag_name)
-
