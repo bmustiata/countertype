@@ -6,13 +6,11 @@ from countertype import CounterType
 class CounterTypeTest(unittest.TestCase):
     @unittest.expectedFailure
     def test_tags_must_contain_id(self) -> None:
-        ct = CounterType()
+        ct: CounterType[str] = CounterType()
 
         ct.put(
-            item="ev1",
-            tags={
-                "_state": "RUNNING",
-            },
+            "ev1",
+            _state="RUNNING",
         )
 
     def test_simple_find(self):

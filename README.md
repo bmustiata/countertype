@@ -1,4 +1,4 @@
-A small collection to index objects using tags.
+A small collection to index objects using tags. Type-safe.
 
 Installation
 ============
@@ -16,7 +16,7 @@ updated.
 
     from countertype import CounterType
 
-    ct = CounterType()
+    ct: CounterType[str] = CounterType()
 
     ct.put(
         "ev1",

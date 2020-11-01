@@ -1,14 +1,16 @@
-from typing import Dict, Any, Set, Optional, Iterator
+from typing import Dict, Any, Set, Optional, Iterator, Generic, TypeVar
 
 from countertype.counter_type_registration import CounterTypeRegistration
 
+T = TypeVar('T')
 
-class CounterType:
+
+class CounterType(Generic[T]):
     def __init__(self) -> None:
         # for each tag we create a reverse index
-        self._indexes: Dict[str, Dict[Any, Set[CounterTypeRegistration]]] = dict()
+        self._indexes: Dict[str, Dict[Any, Set[CounterTypeRegistration[T]]]] = dict()
 
-    def put(self, item: Any, **tags: Dict[str, Any]) -> None:
+    def put(self, item: T, **tags) -> None:
         """
         Put an item into the collection, indexed by tags.
         :param tags:
@@ -41,7 +43,7 @@ class CounterType:
 
             set_items.add(registration)
 
-    def find(self, **kw) -> Optional[Any]:
+    def find(self, **kw) -> Optional[T]:
         """
         Finds the first item matching the tags.
         :param kw:
@@ -57,7 +59,7 @@ class CounterType:
 
         return None
 
-    def find_all(self, **kw) -> Optional[Iterator]:
+    def find_all(self, **kw) -> Optional[Iterator[T]]:
         """
         Find all the items matching the tags.
         :param kw:
@@ -92,7 +94,7 @@ class CounterType:
 
         return map(lambda it: it.item, result_set)
 
-    def remove(self, *, id: str) -> Any:
+    def remove(self, *, id: str) -> Optional[T]:
         """
         Remove an item from the collections if it exists. Returns
         the item if it exists.
@@ -137,10 +139,16 @@ class CounterType:
             set_items.add(registration)
             registration.tags[tag_name] = tag_value
 
-    def _remove_tag_value(self, registration, tag_name, tag_value):
+    def _remove_tag_value(self,
+                          registration: CounterTypeRegistration[T],
+                          tag_name: str,
+                          tag_value: Any) -> None:
         value_set = self._indexes[tag_name][tag_value]
+
         value_set.remove(registration)
+
         if not value_set:
             self._indexes[tag_name].pop(tag_value)
+
         if not self._indexes[tag_name]:
             self._indexes.pop(tag_name)
