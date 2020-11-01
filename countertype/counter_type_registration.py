@@ -1,6 +1,6 @@
 from typing import Any, Dict, Generic, TypeVar
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class CounterTypeRegistration(Generic[T]):

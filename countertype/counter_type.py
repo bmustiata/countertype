@@ -2,7 +2,7 @@ from typing import Dict, Any, Set, Optional, Iterator, Generic, TypeVar
 
 from countertype.counter_type_registration import CounterTypeRegistration
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class CounterType(Generic[T]):
@@ -139,10 +139,9 @@ class CounterType(Generic[T]):
             set_items.add(registration)
             registration.tags[tag_name] = tag_value
 
-    def _remove_tag_value(self,
-                          registration: CounterTypeRegistration[T],
-                          tag_name: str,
-                          tag_value: Any) -> None:
+    def _remove_tag_value(
+        self, registration: CounterTypeRegistration[T], tag_name: str, tag_value: Any
+    ) -> None:
         value_set = self._indexes[tag_name][tag_value]
 
         value_set.remove(registration)
