@@ -1,7 +1,8 @@
-package(default_visibility = ["PUBLIC"])
+package(default_visibility = ["//visibility:public"])
 
 
-python_library(
+py_library(
   name="countertype",
   srcs=glob(["countertype/**/*.py"]),
+  imports=[""],
 )
